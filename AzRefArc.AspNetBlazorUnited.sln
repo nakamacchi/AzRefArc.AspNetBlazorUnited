@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzRefArc.AspNetBlazorUnited
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzRefArc.AspNetBlazorUnited.Client", "AzRefArc.AspNetBlazorUnited\AzRefArc.AspNetBlazorUnited.Client\AzRefArc.AspNetBlazorUnited.Client.csproj", "{04361117-6A82-488E-80FF-1675AD59A73C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzRefArc.AspNetBlazorUnited.Shared", "AzRefArc.AspNetBlazorUnited.Shared\AzRefArc.AspNetBlazorUnited.Shared.csproj", "{869FCBDF-BB11-4F85-BC95-10708EF9F0A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzRefArc.AspNetBlazorUnited.Shared", "AzRefArc.AspNetBlazorUnited\AzRefArc.AspNetBlazorUnited.Shared\AzRefArc.AspNetBlazorUnited.Shared.csproj", "{869FCBDF-BB11-4F85-BC95-10708EF9F0A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
