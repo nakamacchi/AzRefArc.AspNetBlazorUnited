@@ -1,0 +1,68 @@
+﻿@*
+備考：本当は Auto レンダリングのページは Shared プロジェクト側に配置したいが、WASM では自アセンブリ内のページしか描画できない様子
+このため Client プロジェクト側に配置している
+*@
+
+@page "/Samples/InteractiveAutoSample"
+@rendermode InteractiveAuto
+@inject ILogger<InteractiveAutoSample> logger
+
+<PageTitle>InteractiveAutoSample</PageTitle>
+
+<h1>InteractiveAuto サンプル</h1>
+
+<div>
+    <p>このページでは、renderMode = InteractiveAuto の挙動を確認します。以下の手順に沿って、本ページを動かしてみてください。</p>
+    <ul>
+        <li>まず、ブラウザのキャッシュをいったん破棄します。Edge ブラウザであれば、... → 履歴 → ゴミ箱 のアイコンから閲覧データを削除します。</li>
+        <li>
+            そのうえで、このページをリロードします。コンポーネントが Server として動作していることが確認できます。
+            <ul>
+                <li>ボタンをクリックすると、サーバ側でログが出力できることが確認されます。</li>
+                <li>ここでサーバプロセスをシャットダウンしてみてもよいでしょう。Blazor Server として稼働しているため、ページの動作が止まることが確認できます。（※ この作業を行った場合は、次の作業に進む前に、再度アプリを立ち上げなおしてください。）</li>
+            </ul>
+        </li>
+        <li>
+            しばらく待ったうえで、再度このページをリロードします。コンポーネントが一瞬 Server として動作したのち、WASM 動作になることが確認できます。
+            <ul>
+                <li>一瞬だけ "Server" になるのは、このページがプリレンダリングを有効にしているためです。プリレンダリング処理はサーバ側で動作するため、"Server" と表記されます。</li>
+                <li>しかし WASM としての動作がブラウザ上で開始されると、改めてこのページのレンダリング処理がブラウザ上で行われるため、動作モードの表記が "WASM" に変わります。</li>
+                <li>F12 開発者ツールでブラウザコンソールを開くと、そこにログが出力されていることが確認されます。</li>
+            </ul>
+        </li>
+        <li>
+            余力があれば、本ページのレンダリングモードを "InteractiveAutoWithoutPrerendering" に変えて上記の作業を行ってみてください。プリレンダリング動作を行わないため、よりシンプルな挙動を行います。
+            <ul>
+                <li>ブラウザ側にキャッシュがないときには "Server" として動作します。</li>
+                <li>ブラウザ側にキャッシュがあるときは "WASM" として動作します。</li>
+            </ul>
+        </li>
+    </ul>
+
+</div>
+
+
+<div>
+    <strong style="color: red;">
+        このコンポーネントは現在
+        <span>
+            @(System.Runtime.InteropServices.RuntimeInformation.OSDescription.ToLower() == "browser" ? "WASM" : "Server")
+        </span>
+        で動作しています。
+    </strong>
+</div>
+
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+        logger.LogInformation("現在のカウンター = " + currentCount);
+    }
+}

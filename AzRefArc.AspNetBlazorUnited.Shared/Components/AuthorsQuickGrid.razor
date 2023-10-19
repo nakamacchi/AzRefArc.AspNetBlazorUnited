@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.Components.QuickGrid
+
+@rendermode InteractiveAuto
+
+@if (Authors == null)
+{
+    <p>まだデータがありません。</p>
+}
+else if (Authors.ToList().Count == 0)
+{
+    <p>データが1件もありません。</p>
+}
+else
+{
+    <div class="table-responsive">
+        <QuickGrid Items="@Authors.AsQueryable()" Pagination="@paginationState">
+            <PropertyColumn Property="@(a => a.AuthorId)" Title="著者ID" Sortable="true" />
+            <TemplateColumn Title="著者名" Sortable="true" SortBy="@(GridSort<Author>.ByAscending(a => a.AuthorFirstName).ThenAscending(a => a.AuthorLastName))">
+                @(context.AuthorFirstName + " " + context.AuthorLastName)
+            </TemplateColumn>
+            <PropertyColumn Property="@(a => a.Phone)" Title="電話番号" Sortable="true" />
+            <PropertyColumn Property="@(a => a.State)" Title="州" Sortable="true" />
+            <TemplateColumn Title="契約有無" Sortable="true" SortBy="@(GridSort<Author>.ByAscending(a => a.Contract))">
+                <input type="checkbox" disabled checked="@(context.Contract)" />
+                @(context.Contract ? "契約あり" : "契約なし")
+            </TemplateColumn>
+        </QuickGrid>
+        <Paginator State="@paginationState" />
+    </div>
+}
+
+@code {
+    // 外部パラメータ
+    [Parameter]
+    public List<Author>? Authors { get; set; }
+
+    // ビューモデル
+    PaginationState paginationState = new PaginationState { ItemsPerPage = 10 };
+}

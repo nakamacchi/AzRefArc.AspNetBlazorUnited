@@ -1,0 +1,44 @@
+﻿@page "/Samples/PersistentCounter"
+@rendermode InteractiveServerWithoutPrerendering
+
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedLocalStorage storage
+
+<PageTitle>永続型カウンター</PageTitle>
+
+<h1>永続型カウンター</h1>
+
+@if (currentCount.HasValue)
+{
+    <p role="status">Current count: @currentCount</p>
+    <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+}
+else
+{
+    <p>データを取得中です...</p>
+}
+
+<div>
+    このコンポーネントは現在
+    <span>
+        @(System.Runtime.InteropServices.RuntimeInformation.OSDescription.ToLower() == "browser" ? "WASM" : "Server")
+    </span>
+    で動作しています。
+</div>
+
+@code {
+    private int? currentCount = 0;
+    private static string COUNTER_KEY = "Samples.PersistentCounter.CurrentCount";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await storage.GetAsync<int>(COUNTER_KEY);
+        currentCount = result.Success ? result.Value : 0;
+    }
+
+    private async Task IncrementCount()
+    {
+        currentCount++;
+        await storage.SetAsync(COUNTER_KEY, currentCount!.Value);
+    }
+}

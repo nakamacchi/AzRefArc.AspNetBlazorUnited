@@ -1,0 +1,74 @@
+﻿@page "/BizGroupC/ShowAllAuthors/ListAuthors"
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+@rendermode InteractiveServerWithoutPrerendering
+
+@* アプリケーションサービス *@
+@inject IDbContextFactory<PubsDbContext> dbFactory
+
+<PageTitle>著者データ一覧</PageTitle>
+
+<h3>著者データ一覧</h3>
+<h5>データを取得します。</h5>
+
+<fieldset disabled="@isFormDisabled">
+    <input type="button" @onclick="GetData" class="btn btn-primary" value="データ取得" />
+    <input type="button" @onclick="ResetData" class="btn btn-warning" value="リセット" />
+</fieldset>
+
+<hr />
+
+@if (authors == null)
+{
+    <p>データをロード中です...</p>
+}
+else if (authors.Count == 0)
+{
+    <p>データがありません。</p>
+}
+else
+{
+    <div class="table-responsive">
+        <QuickGrid Items="@authors.AsQueryable()" Pagination="@paginationState">
+            <PropertyColumn Property="@(a => a.AuthorId)" Title="著者ID" Sortable="true" />
+            <TemplateColumn Title="著者名" Sortable="true" SortBy="@(GridSort<Author>.ByAscending(a => a.AuthorFirstName).ThenAscending(a => a.AuthorLastName))">
+                @(context.AuthorFirstName + " " + context.AuthorLastName)
+            </TemplateColumn>
+            <PropertyColumn Property="@(a => a.Phone)" Title="電話番号" Sortable="true" />
+            <PropertyColumn Property="@(a => a.State)" Title="州" Sortable="true" />
+            <TemplateColumn Title="契約有無" Sortable="true" SortBy="@(GridSort<Author>.ByAscending(a => a.Contract))">
+                <input type="checkbox" disabled checked="@(context.Contract)" />
+                @(context.Contract ? "契約あり" : "契約なし")
+            </TemplateColumn>
+        </QuickGrid>
+        <Paginator State="@paginationState" />
+    </div>
+}
+
+@code {
+    // 外部パラメータ
+
+    // ビューモデル
+    List<Author>? authors { get; set; } = new List<Author>();
+    PaginationState paginationState = new PaginationState { ItemsPerPage = 10 };
+    bool isFormDisabled { get; set; } = false;
+
+    // イベントハンドラ(アプリケーション処理)
+    protected async Task GetData()
+    {
+        authors = null;
+        isFormDisabled = true;
+        await Task.Delay(1000);
+
+        using (var pubs = dbFactory.CreateDbContext())
+        {
+            authors = await pubs.Authors.ToListAsync();
+        }
+        isFormDisabled = false;
+    }
+
+    protected void ResetData()
+    {
+        authors = new List<Author>();
+    }
+}

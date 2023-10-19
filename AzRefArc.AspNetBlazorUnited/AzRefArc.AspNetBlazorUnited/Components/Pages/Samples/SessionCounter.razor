@@ -1,0 +1,54 @@
+﻿@page "/Samples/SessionCounter"
+@rendermode InteractiveServerWithoutPrerendering
+
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage storage
+
+@inject NavigationManager nav
+
+<PageTitle>セッション型カウンター</PageTitle>
+
+<h1>セッション型カウンター（1ページ目）</h1>
+
+@if (currentCount.HasValue)
+{
+    <p role="status">Current count: @currentCount</p>
+    <button class="btn btn-primary" @onclick="IncrementCount">増やす</button>
+    <button class="btn btn-primary" @onclick="MoveToNextPage">次のページへ</button>
+}
+else
+{
+    <p>データを取得中です...</p>
+}
+
+<div>
+    このコンポーネントは現在
+    <span>
+        @(System.Runtime.InteropServices.RuntimeInformation.OSDescription.ToLower() == "browser" ? "WASM" : "Server")
+    </span>
+    で動作しています。
+</div>
+
+@code {
+    private int? currentCount = 0;
+    private static string COUNTER_KEY = "Samples.SessionCounter.CurrentCount";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await storage.GetAsync<int>(COUNTER_KEY);
+        currentCount = result.Success ? result.Value : 0;
+    }
+
+    private async Task IncrementCount()
+    {
+        currentCount++;
+        await storage.SetAsync(COUNTER_KEY, currentCount!.Value);
+    }
+
+    private void MoveToNextPage()
+    {
+        nav.NavigateTo("/Samples/SessionNextPage");
+    }
+
+
+}

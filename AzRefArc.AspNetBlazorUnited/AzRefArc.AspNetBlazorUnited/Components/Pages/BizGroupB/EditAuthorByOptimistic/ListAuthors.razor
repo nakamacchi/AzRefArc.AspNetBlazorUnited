@@ -1,0 +1,85 @@
+﻿@page "/BizGroupB/EditAuthorByOptimistic/ListAuthors"
+
+@* イベントハンドラがないので Static SSR が利用可能 *@
+@attribute [StreamRendering(true)]
+
+@* アプリケーションサービス *@
+@inject IDbContextFactory<PubsDbContext> dbFactory
+
+<PageTitle>著者データの編集</PageTitle>
+
+<h3>著者データの編集</h3>
+<h5>編集対象となる著者を選択してください。</h5>
+
+@if (authors == null)
+{
+    <p><em>現在データを取得中です...</em></p>
+}
+else if (authors.Count == 0)
+{
+    <p><em>データが一件もありません。</em></p>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-condensed table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>著者ID</th>
+                    <th>著者名</th>
+                    <th>電話番号</th>
+                    <th>州</th>
+                    <th>契約有無</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var a in authors)
+                    {
+                        <tr>
+                            <td><a href="/BizGroupB/EditAuthorByOptimistic/EditAuthor/@a.AuthorId">@a.AuthorId</a></td>
+                            <td>@a.AuthorName</td>
+                            <td>@a.Phone</td>
+                            <td>@a.State</td>
+                            <td>@if (a.Contract)
+                                {
+                                    <input type="checkbox" disabled checked /> <span>契約あり</span>
+                                }
+                                else
+                                {
+                                    <input type="checkbox" disabled /> <span>契約なし</span>
+
+                                }
+                            </td>
+                        </tr>
+                    }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    // 外部パラメータ
+
+    // ビューモデル
+    private List<AuthorOverview>? authors { get; set; } = new List<AuthorOverview>();
+
+    // イベントハンドラ(アプリケーション処理)
+    protected override async Task OnInitializedAsync()
+    {
+        authors = null;
+
+        using (var pubs = dbFactory.CreateDbContext())
+        {
+            var query = from a in pubs.Authors
+                        select new AuthorOverview()
+                            {
+                                AuthorId = a.AuthorId,
+                                AuthorName = a.AuthorFirstName + " " + a.AuthorLastName,
+                                Phone = a.Phone,
+                                State = a.State,
+                                Contract = a.Contract
+                            };
+            authors = await query.ToListAsync();
+        }
+    }
+}

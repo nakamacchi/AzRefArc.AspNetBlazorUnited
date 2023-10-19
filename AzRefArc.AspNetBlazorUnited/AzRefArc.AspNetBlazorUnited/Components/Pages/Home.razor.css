@@ -1,0 +1,44 @@
+﻿.square::before {
+    content: "";
+    display: inline-block;
+    width: 12px;  /* これは四角のサイズです。適切なサイズに変更してください */
+    height: 12px;
+    vertical-align: middle;
+}
+
+.square-icon-ssr-without-streamrendering::before {
+    background-color: gray;
+}
+
+.square-icon-ssr-with-streamrendering::before {
+    background-color: red;
+}
+
+.square-icon-server-without-prerender::before {
+    background-color: blue;
+}
+
+.square-icon-server-with-prerender::before {
+    background-color: cyan;
+}
+
+.square-icon-wasm-without-prerender::before {
+    background-color: green;
+}
+
+.square-icon-wasm-with-prerender::before {
+    background-color: purple;
+}
+
+.square-icon-auto-with-prerender::before {
+    background-color: yellow;
+}
+
+.square-icon-auto-without-prerender::before {
+    background-color: wheat;
+}
+
+#renderingmodelist td {
+    padding-left: 5px;
+    padding-right: 5px;
+}

@@ -1,0 +1,87 @@
+﻿@using AzRefArc.AspNetBlazorUnited.Shared.Data
+
+@rendermode InteractiveAuto
+
+@if (Authors == null)
+{
+    <p>まだデータがありません。</p>
+}
+else if (Authors.Count == 0)
+{
+    <p>データが1件もありません。</p>
+}
+else
+{
+<div class="table-responsive">
+    <table class="table table-condensed table-striped table-hover">
+        <thead>
+            <tr>
+                <th><nav class="nav nav-item" @onclick='() => SortData("AuthorId")'>著者ID</nav></th>
+                <th><nav class="nav nav-item" @onclick='() => SortData("AuthorName")'>著者名</nav></th>
+                <th><nav class="nav nav-item" @onclick='() => SortData("Phone")'>電話番号</nav></th>
+                <th><nav class="nav nav-item" @onclick='() => SortData("State")'>州</nav></th>
+                <th><nav class="nav nav-item" @onclick='() => SortData("Contract")'>契約有無</nav></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var a in Authors)
+            {
+                <tr>
+                    <td>@a.AuthorId</td>
+                    <td>@a.AuthorName</td>
+                    <td>@a.Phone</td>
+                    <td>@a.State</td>
+                    <td>@if (a.Contract)
+                        {
+                            <input type="checkbox" disabled checked /> <span>契約あり</span>
+                        }
+                        else
+                        {
+                            <input type="checkbox" disabled /> <span>契約なし</span>
+
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}
+
+
+@code {
+    // 外部パラメータ
+    [Parameter]
+    public List<AuthorOverview>? Authors { get; set; }
+
+    private string currentSortKey = "";
+    private bool isCurrentSortDescending = false; 
+
+    protected void SortData(string sortKey)
+    {
+        if (Authors != null)
+        {
+            Func<AuthorOverview, string>? keySelector = null;
+            if (sortKey == "AuthorId") keySelector = a => a.AuthorId;
+            if (sortKey == "AuthorName") keySelector = a => a.AuthorName;
+            if (sortKey == "Phone") keySelector = a => a.AuthorName;
+            if (sortKey == "State") keySelector = a => a.AuthorName;
+            if (sortKey == "Contract") keySelector = a => a.Contract.ToString();
+
+            if (keySelector != null)
+            {
+                if (currentSortKey == sortKey && isCurrentSortDescending == false)
+                {
+                    Authors = Authors.OrderByDescending(keySelector).ToList();
+                    isCurrentSortDescending = true;
+                }
+                else
+                {
+                    Authors = Authors.OrderBy(keySelector).ToList();
+                    currentSortKey = sortKey;
+                    isCurrentSortDescending = false;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,50 @@
+﻿@page "/BizGroupC/ShowAuthorsByTopN/FilterByTopN"
+
+@rendermode InteractiveServerWithoutPrerendering
+
+@* アプリケーションサービス *@
+@inject IDbContextFactory<PubsDbContext> dbFactory
+
+<PageTitle>件数に基づくデータ取得</PageTitle>
+
+<h3>件数に基づくデータ取得</h3>
+
+<h5>取得する件数を指定してください。</h5>
+
+<EditForm Model="@vm" OnValidSubmit="@GetData">
+    <fieldset disabled="@isFormDisabled">
+        <DataAnnotationsValidator />
+
+        表示する件数 <InputText @bind-Value="vm.Count" class="form-text" /> <button type="submit">表示</button>
+
+        <ValidationSummary />
+    </fieldset>    
+</EditForm>
+
+<hr />
+
+<AuthorsQuickGrid Authors="authors" />
+
+@code {
+    // 外部パラメータ
+
+    // ビューモデル
+    private FilterByTopNViewModel vm = new FilterByTopNViewModel();
+    private List<Author>? authors = new List<Author>();
+    private bool isFormDisabled = false;
+
+    // イベントハンドラ(業務ロジック)
+    protected async Task GetData()
+    {
+        isFormDisabled = true;
+        authors = null;
+        await Task.Delay(1000);
+
+        using (var pubs = dbFactory.CreateDbContext())
+        {
+            var query = pubs.Authors.OrderBy(a => a.AuthorId).Take(int.Parse(vm.Count));
+            authors = await query.ToListAsync();
+        }
+        isFormDisabled = true;
+    }
+}

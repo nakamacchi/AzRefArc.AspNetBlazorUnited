@@ -1,0 +1,59 @@
+﻿@page "/BizGroupA/ShowAuthorsByState/FilterByStateWithSort2"
+
+@rendermode InteractiveServerWithoutPrerendering
+
+@* アプリケーションサービス *@
+@inject IDbContextFactory<PubsDbContext> dbFactory
+
+<PageTitle>州による著者一覧表示</PageTitle>
+
+<h3>州による著者一覧表示</h3>
+<h5>州を指定してください。</h5>
+
+<select @bind="selectedKey" class="form-select-sm">
+    @if (states != null) foreach(var item in states)
+    {
+        <option value="@item.Key">@item.Value</option>
+    }
+</select>
+
+<input type="button" @onclick="GetData" class="btn btn-primary" value="データ取得" />
+
+<hr />
+
+<AuthorsDataGrid Authors="authors" />
+
+@code {
+    // 外部パラメータ
+
+    // ビューモデル
+    private string selectedKey = "";
+    private SortedDictionary<string, string> states = new SortedDictionary<string, string>();
+    private List<AuthorOverview>? authors = new List<AuthorOverview>();
+
+    // イベントハンドラ(アプリケーション処理)
+    protected override void OnInitialized()
+    {
+        states = USStatesUtil.GetAllStates();
+    }
+
+    protected async Task GetData()
+    {
+        authors = null;
+
+        using (var pubs = dbFactory.CreateDbContext())
+        {
+            var query = from a in pubs.Authors
+                        where a.State == selectedKey
+                        select new AuthorOverview()
+                            {
+                                AuthorId = a.AuthorId,
+                                AuthorName = a.AuthorFirstName + " " + a.AuthorLastName,
+                                Phone = a.Phone,
+                                State = a.State,
+                                Contract = a.Contract
+                            };
+            authors = await query.ToListAsync();
+        }
+    }
+}

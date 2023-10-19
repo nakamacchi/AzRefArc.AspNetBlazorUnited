@@ -1,0 +1,78 @@
+﻿@page "/Utilities/DiagnosticsServer"
+@using System.Runtime.InteropServices
+
+@rendermode InteractiveServerWithoutPrerendering
+
+@inject IWebHostEnvironment env
+@inject IConfiguration config
+
+<PageTitle>アプリ設定・構成設定情報 (WASM)</PageTitle>
+
+<div class="row">
+    <div>
+        <h5>コンポーネント動作</h5>
+        <div>
+            このコンポーネントは現在
+            <span>
+                @(System.Runtime.InteropServices.RuntimeInformation.OSDescription.ToLower() == "browser" ? "WASM" : "Server")
+            </span>
+            で動作しています。
+        </div>
+
+        <hr />
+
+        <h5>アプリ情報</h5>
+
+        @{
+            Dictionary<string, string> items = new Dictionary<string, string>();
+#if DEBUG
+        items.Add("ビルドの種類", "デバッグビルド");
+#else
+            items.Add("ビルドの種類", "リリースビルド");
+#endif
+            items.Add("アプリケーションベースパス", AppContext.BaseDirectory);
+            items.Add("ターゲットフレームワーク名", AppContext.TargetFrameworkName!.ToString());
+
+            items.Add("アプリケーション名", env.ApplicationName);
+            items.Add("コンテントルートパス", env.ContentRootPath);
+            items.Add("Web ルートパス", env.WebRootPath);
+            items.Add("環境名", env.EnvironmentName);
+
+            items.Add("フレームワーク", System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription);
+            items.Add("OS", System.Runtime.InteropServices.RuntimeInformation.OSDescription);
+            items.Add("OSアーキテクチャ", System.Runtime.InteropServices.RuntimeInformation.OSArchitecture.ToString());
+            items.Add("プロセスアーキテクチャ", System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture.ToString());
+            items.Add("現在時刻", DateTime.Now.ToString());
+        }
+
+        <div>
+            @foreach (var key in items.Keys)
+            {
+                <dl>
+                    <dt>@key</dt>
+                    <dd>@items[key]</dd>
+                </dl>
+            }
+        </div>
+
+        <hr />
+
+        @{
+            string DumpChildren(Microsoft.Extensions.Configuration.IConfiguration config)
+            {
+                string temp = string.Empty;
+                temp += "<ul>";
+                foreach (var de in config.GetChildren())
+                {
+                    temp += "<li>" + de.Key + " = " + de.Value + DumpChildren(de) + "</li>";
+                }
+                temp += "</ul>";
+                return temp;
+            };
+        }
+
+        <h4>構成設定情報</h4>
+
+        @((MarkupString)DumpChildren(config))
+    </div>
+</div>

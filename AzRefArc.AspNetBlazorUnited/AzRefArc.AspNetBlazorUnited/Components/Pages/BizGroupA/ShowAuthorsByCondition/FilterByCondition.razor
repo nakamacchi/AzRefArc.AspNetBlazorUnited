@@ -1,0 +1,103 @@
+﻿@page "/BizGroupA/ShowAuthorsByCondition/FilterByCondition"
+
+@rendermode InteractiveServerWithoutPrerendering
+
+@* アプリケーションサービス *@
+@inject IDbContextFactory<PubsDbContext> dbFactory
+
+<PageTitle>複雑な条件指定による著者一覧表示</PageTitle>
+
+<h3>複雑な条件指定による著者一覧表示</h3>
+<h5>検索条件を指定してください。</h5>
+
+<EditForm Model="@vm" OnValidSubmit="@GetData">
+    <DataAnnotationsValidator />
+
+    <dl>
+        <dt>
+            <InputCheckbox @bind-Value="vm.IsEnabledAuFname" class="form-check-input" /> 著者名(名)による検索
+        </dt>
+        <dd>
+            <InputText @bind-Value="vm.AuFname" class="form-text" />
+        </dd>
+
+        <dt>
+            <InputCheckbox @bind-Value="vm.IsEnabledPhone" class="form-check-input" /> 電話番号による検索
+        </dt>
+        <dd>
+            <InputText @bind-Value="vm.Phone" class="form-text" />
+        </dd>
+
+        <dt>
+            <InputCheckbox @bind-Value="vm.IsEnabledState" class="form-check-input" /> 州による検索
+        </dt>
+        <dd>
+            <InputSelect @bind-Value="vm.State" class="form-select-sm">
+                @if (states != null) foreach (var item in states)
+                {
+                    <option value="@item.Key">@item.Value</option>
+                }
+            </InputSelect>
+        </dd>
+
+        <dt>
+            <InputCheckbox @bind-Value="vm.IsEnabledContract" class="form-check-input" /> 契約有無による検索
+        </dt>
+        <dd>
+            <InputSelect @bind-Value="vm.ContractString" class="form-select-sm">
+                <option value=""></option>
+                <option value="true">契約あり</option>
+                <option value="false">契約なし</option>
+            </InputSelect>
+        </dd>
+
+    </dl>
+
+    <button type="submit" class="btn btn-primary">検索</button>
+
+    <ValidationSummary />
+    
+</EditForm>
+
+<hr />
+
+<AuthorsDataGrid Authors="authors" />
+
+@code {
+    // 外部パラメータ
+
+    // ビューモデル
+    private FindConditionViewModel vm = new FindConditionViewModel();
+    private SortedDictionary<string, string> states = new SortedDictionary<string, string>();
+    private List<AuthorOverview>? authors = new List<AuthorOverview>();
+
+    // イベントハンドラ(アプリケーション処理)
+    protected override void OnInitialized()
+    {
+        states = USStatesUtil.GetAllStates();
+        states.Add("", "");
+    }
+
+    private async Task GetData()
+    {
+        authors = null;
+
+        using (var pubs = dbFactory.CreateDbContext())
+        {
+            var query = pubs.Authors.AsQueryable();
+            if (vm.IsEnabledState) query = query.Where(a => a.State == vm.State);
+            if (vm.IsEnabledPhone) query = query.Where(a => a.Phone == vm.Phone);
+            if (vm.IsEnabledContract) query = query.Where(a => a.Contract == vm.Contract!.Value);
+            if (vm.IsEnabledAuFname) query = query.Where(a => a.AuthorFirstName.StartsWith(vm.AuFname));
+
+            authors = await query.Select(a => new AuthorOverview()
+            {
+                AuthorId = a.AuthorId,
+                AuthorName = a.AuthorFirstName + " " + a.AuthorLastName,
+                Phone = a.Phone,
+                State = a.State,
+                Contract = a.Contract
+            }).ToListAsync();
+        }
+    }
+}

@@ -1,0 +1,108 @@
+﻿@page "/"
+
+<PageTitle>ASP.NET Core Blazor United 業務サンプルアプリケーション</PageTitle>
+
+<div class="row">
+    <img src="/Images/banner.png" class="img-responsive" style="margin: 0 auto;" /> @* img-responsive にすると画像サイズが動的に変化。margin: 0 auto; によりセンタリング *@
+</div>
+
+<div style="height: 10px"></div>
+
+<div class="row">
+    <div>
+        <h5 id="bizGroupA">ASP.NET Core Blazor United による業務サンプルアプリ</h5>
+        <ul>
+            <li>
+                各ページの稼働モデルは以下の通りです。
+                <table id="renderingmodelist" class="table-responsive">
+                    <tr>
+                        <td><span class="square square-icon-ssr-without-streamrendering mx-10"></span></td>
+                        <td>Static SSR</td>
+                        <td>（サーバ側静的レンダリング）</td>
+                    </tr>
+                    <tr>
+                        <td><span class="square square-icon-ssr-with-streamrendering"></span></td>
+                        <td>Static SSR + StreamRendering</td>
+                        <td>（サーバ側静的ストリームレンダリング）</td>
+                    </tr>
+                    <tr>
+                        <td><span class="square square-icon-server-with-prerender"></span></td>
+                        <td>Interactive Server with Prerendering</td>
+                        <td>（Blazor Server プリレンダリングつき）</td>
+                    </tr>
+                    <tr>
+                        <td><span class="square square-icon-server-without-prerender"></span></td>
+                        <td>Interactive Server without Prerendering</td>
+                        <td>（Blazor Server プリレンダリングなし）</td>
+                    </tr>
+                    <tr>
+                        <td><span class="square square-icon-wasm-with-prerender"></span></td>
+                        <td>Interactive WASM with Prerendering</td>
+                        <td>（Blazor WASM サーバ側プリレンダリングつき）</td>
+                    </tr>
+                    <tr>
+                        <td><span class="square square-icon-wasm-without-prerender"></span></td>
+                        <td>Interactive WASM without Prerendering</td>
+                        <td>（Blazor WASM サーバ側プリレンダリングなし）（＝ブラウザ上でのみ動作）</td>
+                    </tr>
+                    <tr>
+                        <td><span class="square square-icon-auto-with-prerender"></span></td>
+                        <td>Interactive Auto with Prerendering</td>
+                        <td>（Blazor Auto サーバ側プリレンダリングつき）</td>
+                    </tr>
+                    <tr>
+                        <td><span class="square square-icon-auto-without-prerender"></span></td>
+                        <td>Interactive Auto without Prerendering</td>
+                        <td>（Blazor Auto サーバ側プリレンダリングなし）</td>
+                    </tr>
+                </table>
+            </li>
+            <li id="BizGroupA">
+                参照系アプリ
+                <ul>
+                    <li><span class="square square-icon-ssr-with-streamrendering"></span> <a href="/BizGroupA/ShowAllAuthors/ListAuthors">全著者データの表示</a></li>
+                    <li><span class="square square-icon-server-without-prerender"></span> <a href="/BizGroupA/ShowAuthorsByState/FilterByState">州による著者データ検索</a></li>
+                    <li><span class="square square-icon-server-without-prerender"></span> <a href="/BizGroupA/ShowAuthorsByState/FilterByStateWithSort">州による著者データ検索(ソート機能つき)</a></li>
+                    <li><span class="square square-icon-server-without-prerender"></span> <a href="/BizGroupA/ShowAuthorsByState/FilterByStateWithSort2">州による著者データ検索(ソート機能つき・部品再利用)</a></li>
+                    <li><span class="square square-icon-server-without-prerender"></span> <a href="/BizGroupA/ShowAuthorsByTopN/FilterByTopN">件数による著者データ検索</a></li>
+                    <li><span class="square square-icon-server-without-prerender"></span> <a href="/BizGroupA/ShowAuthorsByCondition/FilterByCondition">複雑な条件による著者データ検索</a></li>
+                </ul>
+            </li>
+            <li id="BizGroupB">
+                更新系アプリ
+                <ul>
+                    <li><span class="square square-icon-ssr-with-streamrendering"></span> <span class="square square-icon-server-without-prerender"></span> <a href="/BizGroupB/EditAuthorByOptimistic/ListAuthors">著者データの編集 (楽観同時実行制御)</a></li>
+                </ul>
+            </li>
+            <li id="BizGroupC">
+                QuickGrid による実装アプリ
+                <ul>
+                    <li><span class="square square-icon-server-without-prerender"></span> <a href="/BizGroupC/ShowAllAuthors/ListAuthors">全著者データの表示</a></li>
+                    <li><span class="square square-icon-server-without-prerender"></span> <a href="/BizGroupC/ShowAuthorsByState/FilterByState">州による著者データ検索</a></li>
+                    <li><span class="square square-icon-server-without-prerender"></span> <a href="/BizGroupC/ShowAuthorsByTopN/FilterByTopN">件数による著者データ検索</a></li>
+                    <li><span class="square square-icon-server-without-prerender"></span> <a href="/BizGroupC/ShowAuthorsByCondition/FilterByCondition">複雑な条件による著者データ検索</a></li>
+                    <li><span class="square square-icon-server-without-prerender"></span> <a href="/BizGroupC/ShowAuthorDetail/ShowAuthorDetail">著者の詳細情報の表示</a></li>
+                </ul>
+            </li>
+            <li id="Utilities">
+                ユーティリティ
+                <ul>
+                    <li><span class="square square-icon-server-without-prerender"></span> <a href="/Utilities/DiagnosticsServer">サーバ診断情報</a></li>
+                    <li><span class="square square-icon-wasm-without-prerender"></span> <a href="/Utilities/DiagnosticsWASM">クライアント診断情報</a></li>
+                    <li><span class="square square-icon-server-without-prerender"></span> <a href="/Utilities/RaiseExceptionServer">サンプル例外発生（サーバ側）</a></li>
+                    <li><span class="square square-icon-wasm-without-prerender"></span> <a href="/Utilities/RaiseExceptionWASM">サンプル例外発生（クライアント側）</a></li>
+                </ul>
+            </li>
+            <li id="Samples">
+                各種サンプル
+                <ul>
+                    <li><span class="square square-icon-auto-with-prerender"></span> <a href="/Samples/InteractiveAutoSample">InteractiveAuto の挙動サンプル</a></li>
+                    <li><span class="square square-icon-auto-without-prerender"></span> <a href="/Samples/InteractiveAutoListAuthors">InteractiveAuto の著者一覧表示</a></li>
+                    <li><span class="square square-icon-server-without-prerender"></span> <a href="/Samples/PersistentCounter">永続型カウンター</a></li>
+                    <li><span class="square square-icon-server-without-prerender"></span> <a href="/Samples/SessionCounter">セッション型カウンター</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+

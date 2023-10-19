@@ -1,0 +1,119 @@
+﻿@page "/BizGroupC/ShowAuthorDetail/ShowAuthorDetail"
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+@rendermode InteractiveServerWithoutPrerendering
+
+@* アプリケーションサービス *@
+@inject IDbContextFactory<PubsDbContext> dbFactory
+
+<PageTitle>著者の詳細情報の表示</PageTitle>
+
+<h3>著者の詳細情報の表示 (1 画面版)</h3>
+
+@if (authors == null)
+{
+    <p>データをロード中です...</p>
+}
+else if (authors.Count == 0)
+{
+    <p>データがありません。</p>
+}
+else
+{
+    <div class="table-responsive">
+        <QuickGrid Items="@authors.AsQueryable()" Pagination="@paginationState">
+            <TemplateColumn Title="著者ID" Sortable="true">
+                <!-- 通常のボタンを使いたい場合 -->
+                @* <button @onclick="@(() => btnSelect_OnClick(context))">@(context.AuthorId)</button> *@
+                <!-- ハイパーリンクボタンを使いたい場合 -->
+                <a href="" @onclick="@(() => btnSelect_OnClick(context))" @onclick:preventDefault>@(context.AuthorId)</a>
+            </TemplateColumn>
+            <TemplateColumn Title="著者名">
+                @(context.AuthorFirstName) @(context.AuthorLastName)
+            </TemplateColumn>
+            <PropertyColumn Property="@(a => a.Phone)" Title="電話番号" />
+            <PropertyColumn Property="@(a => a.State)" Title="州" />
+            <TemplateColumn Title="契約有無">
+                <input type="checkbox" disabled value="@(context.Contract)" />
+                @(context.Contract ? "契約あり" : "契約なし")
+            </TemplateColumn>
+        </QuickGrid>
+
+        <!-- 表示するページを、paginationState データを介して連携 -->
+        <Paginator State="@paginationState" />
+    </div>
+}
+
+@if (authorToDisplay == null)
+{
+    <span>データを表示する著者を選択してください。</span>
+}
+else
+{
+    <p>@message</p>
+
+    <div>
+        <dl>
+            <dt>著者ID</dt><dd>@authorToDisplay.AuthorId</dd>
+            <dt>著者名</dt><dd>@authorToDisplay.AuthorFirstName @authorToDisplay.AuthorLastName</dd>
+            <dt>住所</dt><dd>@authorToDisplay.Address @authorToDisplay.City @authorToDisplay.State @authorToDisplay.Zip</dd>
+            <dt>電話番号</dt><dd>@authorToDisplay.Phone</dd>
+            <dt>契約有無</dt><dd>@(authorToDisplay.Contract ? "契約あり" : "契約なし")</dd>
+            <dt>執筆書籍数</dt><dd>@(authorToDisplay.TitleAuthors.Count())</dd>
+        </dl>
+    </div>
+    <div>
+        @if (titles == null)
+        {
+            <p>データをロード中です...</p>
+        }
+        else if (titles.Count == 0)
+        {
+            <p>著書がありません。</p>
+        }
+        else
+        {
+            <QuickGrid Items="@titles.AsQueryable()">
+                <PropertyColumn Property="@(t => t.TitleId)" Title="書籍ID" />
+                <PropertyColumn Property="@(t => t.TitleName)" Title="書籍名" />
+                <PropertyColumn Property="@(t => t.Price)" Title="価格" />
+                <PropertyColumn Property="@(t => t.Publisher!.PublisherName)" Title="出版社名" />
+            </QuickGrid>
+        }
+    </div>
+}
+
+@code {
+    private List<Author>? authors { get; set; } = new List<Author>();
+    PaginationState paginationState = new PaginationState { ItemsPerPage = 10 };
+    private string? message { get; set; } = null;
+    private List<Title>? titles { get; set; } = null;
+    private Author? authorToDisplay { get; set; } = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        using (var pubs = dbFactory.CreateDbContext())
+        {
+            authors = await pubs.Authors.ToListAsync();
+        }
+    }
+
+    private async Task btnSelect_OnClick(Author selectedAuthor)
+    {
+        this.message = string.Format("{0} {1} さんの情報は以下の通りです。", selectedAuthor.AuthorFirstName, selectedAuthor.AuthorLastName);
+
+        using (var pubs = dbFactory.CreateDbContext())
+        {
+            titles = await pubs.Titles.Where(t => t.TitleAuthors
+                .Where(ta => ta.AuthorId == selectedAuthor.AuthorId).Count() > 0)
+                .Include(t => t.Publisher)
+                .ToListAsync();
+
+            authorToDisplay = await pubs.Authors.Where(a => a.AuthorId == selectedAuthor.AuthorId)
+                .Include(a => a.TitleAuthors).FirstOrDefaultAsync();
+        }
+
+        // バインド通知
+        this.StateHasChanged();
+    } 
+}

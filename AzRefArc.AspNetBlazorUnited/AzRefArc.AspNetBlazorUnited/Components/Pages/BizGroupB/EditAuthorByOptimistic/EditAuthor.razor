@@ -1,0 +1,125 @@
+﻿@page "/BizGroupB/EditAuthorByOptimistic/EditAuthor/{AuthorId}"
+
+@rendermode InteractiveServerWithoutPrerendering
+
+@* アプリケーションサービス *@
+@inject IDbContextFactory<PubsDbContext> dbFactory
+@inject NavigationManager navigationManager
+
+<PageTitle>著者データの編集</PageTitle>
+
+<h3>著者データの編集</h3>
+<h5>著者データを修正してください。</h5>
+
+<EditForm Model="@vm" OnValidSubmit="@UpdateData">
+    <DataAnnotationsValidator />
+
+    <dl>
+        <dt>著者 ID</dt>
+        <dd>@vm.AuthorId</dd>
+
+        <dt>著者名(名)</dt>
+        <dd><InputText @bind-Value="vm.AuthorFirstName" class="form-text" /></dd>
+
+        <dt>著者名(姓)</dt>
+        <dd><InputText @bind-Value="vm.AuthorLastName" class="form-text" /></dd>
+
+        <dt>電話番号</dt>
+        <dd><InputText @bind-Value="vm.Phone" class="form-text" /></dd>
+
+        <dt>州</dt>
+        <dd>
+            <InputSelect @bind-Value="vm.State" class="form-select-sm" >
+                @if (states != null) foreach (var item in states)
+                {
+                    <option value="@item.Key">@item.Value</option>
+                }
+            </InputSelect>
+        </dd>
+    </dl>
+
+    <button type="submit" class="btn btn-primary">更新</button>
+    <button type="button" @onclick="GoToListAuthorsPage" class="btn btn-warning">キャンセル</button>
+
+    <ValidationSummary />
+    <span>@concurrentUpdateErrorMessage</span>
+    
+</EditForm>
+
+@code {
+    // 外部パラメータ
+    [Parameter]
+    public string AuthorId { get; set; } = "";
+
+    // ビューモデル
+    private EditViewModel vm = new EditViewModel();
+    private SortedDictionary<string, string> states = new SortedDictionary<string, string>(); // = USStatesUtil.GetAllStates();
+    private string concurrentUpdateErrorMessage = "";
+
+    // イベントハンドラ(アプリケーション処理)
+    protected override async Task OnInitializedAsync()
+    {
+        states = USStatesUtil.GetAllStates();
+
+        Author? editAuthor = null;
+        using (var pubs = dbFactory.CreateDbContext())
+        {
+            var query = from a in pubs.Authors
+                        where a.AuthorId == this.AuthorId
+                        select a;
+            editAuthor = await query.FirstOrDefaultAsync();
+        }
+
+        if (editAuthor == null) throw new InvalidOperationException(this.AuthorId);
+
+        // View に引き渡すデータを準備する
+        vm = new EditViewModel()
+        {
+            AuthorId = editAuthor.AuthorId,
+            AuthorFirstName = editAuthor.AuthorFirstName,
+            AuthorLastName = editAuthor.AuthorLastName,
+            Phone = editAuthor.Phone,
+            State = editAuthor.State ?? ""
+        };
+
+        // データ更新時に再利用する(楽観同時実行制御処理用)
+        originalAuthor = editAuthor;
+    }
+
+    private Author? originalAuthor;
+
+    private async Task UpdateData()
+    {
+        // データベースに登録を試みる
+        using (PubsDbContext pubs = dbFactory.CreateDbContext())
+        {
+            Author target = originalAuthor!;
+
+            target.AuthorFirstName = vm.AuthorFirstName;
+            target.AuthorLastName = vm.AuthorLastName;
+            target.Phone = vm.Phone;
+            target.State = vm.State;
+
+            pubs.Entry<Author>(target).State = EntityState.Modified;
+            try
+            {
+                // 同時実行制御（Timestamp 列で制御）
+                await pubs.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                // 独自にエラーを追加して画面を返す
+                concurrentUpdateErrorMessage = "他のユーザがすでに当該データを更新しています。もう一度はじめからやり直してください。";
+                return;
+            }
+        }
+        // 正常に登録できた場合には、一覧画面に帰る
+        navigationManager.NavigateTo("/BizGroupB/EditAuthorByOptimistic/ListAuthors");
+    }
+
+    private void GoToListAuthorsPage()
+    {
+        navigationManager.NavigateTo("/BizGroupB/EditAuthorByOptimistic/ListAuthors");
+    }
+
+}

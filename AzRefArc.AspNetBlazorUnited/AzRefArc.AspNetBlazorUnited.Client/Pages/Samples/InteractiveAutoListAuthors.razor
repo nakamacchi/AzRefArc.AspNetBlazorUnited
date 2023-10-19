@@ -1,0 +1,84 @@
+﻿@page "/Samples/InteractiveAutoListAuthors"
+@using Microsoft.AspNetCore.Components.QuickGrid
+@rendermode InteractiveAuto
+
+<PageTitle>InteractiveAuto 著者一覧表示</PageTitle>
+
+<h1>InteractiveAuto 著者一覧表示</h1>
+
+<div>
+    <p>このページでは、データ取得が必要なページにおいて、renderMode = InteractiveAuto、すなわち Server, WASM どちらでも動作する
+        ページの作り方のサンプルを示します。</p>
+    <ul>
+        <li>InteractiveAuto の挙動確認方法については、<a href="/Samples/InteractiveAutoSample">こちら</a>のページを見てください。</li>
+        <li>本ページの挙動では、DB 上に存在するデータの取得が必要であり、Server 挙動の場合には EF Core 経由で、WASM 挙動の場合には 
+            httpClient 経由での取得が必要になります。しかし、これらを直接、本ページ上で injection すると、Server または WASM の
+            どちらかでしか動作できなくなってしまうため、本ページにはこれらを抽象化した IInteractiveAutoListAuthorsService を
+            injection しています。
+        </li>
+        <li>サーバ挙動時には InteractiveAutoListAuthorsServiceImpl を、WASM 挙動時には InteractiveAutoListAuthorsServiceClientImpl を
+            injection するように DI コンテナをそれぞれ設定しています。各サービス実装クラスではそれぞれ EF Core, httpClient が必要に
+            なるため、コンストラクタインジェクションによりこれらのサービスを受け取るように実装しています。
+        </li>
+        <li>これらからわかるように、DB や Web API を介したデータ取得が関与するページで Auto 挙動をさせるのは非常に実装が大変です。
+            要件上必要がなければ、むやみに利用しないほうがよいでしょう。
+        </li>
+    </ul>
+</div>
+
+<h5>データを取得します。</h5>
+
+<strong style="color: red;">
+    このコンポーネントは現在
+    <span>
+        @(System.Runtime.InteropServices.RuntimeInformation.OSDescription.ToLower() == "browser" ? "WASM" : "Server")
+    </span>
+    で動作しています。
+</strong>
+
+<fieldset disabled="@isFormDisabled">
+    <input type="button" @onclick="GetData" class="btn btn-primary" value="データ取得" />
+    <input type="button" @onclick="ResetData" class="btn btn-warning" value="リセット" />
+</fieldset>
+
+<hr />
+
+@if (authors == null)
+{
+    <p>データをロード中です...</p>
+}
+else if (authors.Count == 0)
+{
+    <p>データがありません。</p>
+}
+else
+{
+    <AuthorsQuickGrid Authors="@authors" />
+}
+
+@inject IInteractiveAutoListAuthorsService service
+
+@code {
+    // 外部パラメータ
+
+    // ビューモデル
+    List<Author>? authors { get; set; } = new List<Author>();
+    PaginationState paginationState = new PaginationState { ItemsPerPage = 10 };
+    bool isFormDisabled { get; set; } = false;
+
+    // イベントハンドラ(アプリケーション処理)
+    protected async Task GetData()
+    {
+        authors = null;
+        isFormDisabled = true;
+        await Task.Delay(1000);
+        authors = await service.GetAuthorsAsync();
+
+        isFormDisabled = false;
+    }
+
+    protected void ResetData()
+    {
+        authors = new List<Author>();
+    }
+}
