@@ -1,0 +1,60 @@
+﻿@page "/Samples/SharedSessionCounterOnServer"
+@rendermode InteractiveServerWithoutPrerendering
+
+@inject IJSRuntime jSRuntime
+@inject NavigationManager nav
+
+<PageTitle>セッション型カウンター</PageTitle>
+
+<h1>セッション型カウンター（サーバ側）</h1>
+
+@if (currentCount.HasValue)
+{
+    <p role="status">Current count: @currentCount</p>
+    <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+    <button class="btn btn-primary" @onclick="MoveToClientPage">Blazor WASM ページへ</button>
+}
+else
+{
+    <p>データを取得中です...</p>
+}
+
+<div>
+    このコンポーネントは現在
+    <span>
+        @(System.Runtime.InteropServices.RuntimeInformation.OSDescription.ToLower() == "browser" ? "WASM" : "Server")
+    </span>
+    で動作しています。
+</div>
+
+@code {
+    private int? currentCount;
+    private static string COUNTER_KEY = "Samples.SharedSessionCounter.CurrentCount";
+
+    protected override async Task OnInitializedAsync()
+    {
+        string result = await jSRuntime.InvokeAsync<string>("sessionStorage.getItem", COUNTER_KEY);
+        int intValue;
+        if (int.TryParse(result, out intValue) == true)
+        {
+            currentCount = intValue;
+        }
+        else
+        {
+            currentCount = 0;
+        }
+    }
+
+    private async Task IncrementCount()
+    {
+        currentCount++;
+        await jSRuntime.InvokeVoidAsync("sessionStorage.setItem", COUNTER_KEY, currentCount.ToString());
+    }
+
+    private void MoveToClientPage()
+    {
+        nav.NavigateTo("/Samples/SharedSessionCounterOnClient");
+    }
+
+
+}
