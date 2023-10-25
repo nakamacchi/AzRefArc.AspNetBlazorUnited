@@ -1,0 +1,35 @@
+﻿@page "/Samples/ClientSessionCounter2"
+@rendermode InteractiveWebAssemblyWithoutPrerendering
+
+@inject NavigationManager nav
+
+<PageTitle>セッション型カウンター</PageTitle>
+
+<h1>セッション型カウンター（2ページ目）</h1>
+
+<p role="status">Current count: @ClientSession.CurrentCount</p>
+<button class="btn btn-info" @onclick="DecrementCount">減らす</button>
+<button class="btn btn-info" @onclick="BackToPreviousPage">前のページへ</button>
+
+<div>
+    このコンポーネントは現在
+    <span>
+        @(System.Runtime.InteropServices.RuntimeInformation.OSDescription.ToLower() == "browser" ? "WASM" : "Server")
+    </span>
+    で動作しています。
+</div>
+
+@code {
+    private async Task DecrementCount()
+    {
+        ClientSession.CurrentCount--;
+        this.StateHasChanged();
+    }
+
+    private void BackToPreviousPage()
+    {
+        nav.NavigateTo("/Samples/ClientSessionCounter");
+    }
+
+
+}

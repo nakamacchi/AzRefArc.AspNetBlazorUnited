@@ -1,8 +1,7 @@
-﻿@page "/Samples/ServerPersistentCounter"
-@rendermode InteractiveServerWithoutPrerendering
+﻿@page "/Samples/ClientPersistentCounter"
+@rendermode InteractiveWebAssemblyWithoutPrerendering
 
-@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
-@inject ProtectedLocalStorage storage
+@inject IJSRuntime jSRuntime
 
 <PageTitle>永続型カウンター</PageTitle>
 
@@ -28,17 +27,26 @@ else
 
 @code {
     private int? currentCount = 0;
-    private static string COUNTER_KEY = "Samples.ServerPersistentCounter.CurrentCount";
+    private static string COUNTER_KEY = "Samples.ClientPersistentCounter.CurrentCount";
 
     protected override async Task OnInitializedAsync()
     {
-        var result = await storage.GetAsync<int>(COUNTER_KEY);
-        currentCount = result.Success ? result.Value : 0;
+        string result = await jSRuntime.InvokeAsync<string>("localStorage.getItem", COUNTER_KEY);
+        int intValue;
+        if (int.TryParse(result, out intValue) == true)
+        {
+            currentCount = intValue;
+        }
+        else
+        {
+            currentCount = 0;
+        }
     }
 
     private async Task IncrementCount()
     {
         currentCount++;
-        await storage.SetAsync(COUNTER_KEY, currentCount!.Value);
+        await jSRuntime.InvokeVoidAsync("localStorage.setItem", COUNTER_KEY, currentCount.ToString());
     }
+
 }
