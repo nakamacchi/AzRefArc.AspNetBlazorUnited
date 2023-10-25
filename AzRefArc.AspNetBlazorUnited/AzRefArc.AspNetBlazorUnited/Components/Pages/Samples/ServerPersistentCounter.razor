@@ -1,20 +1,17 @@
-﻿@page "/Samples/SessionCounter"
+﻿@page "/Samples/ServerPersistentCounter"
 @rendermode InteractiveServerWithoutPrerendering
 
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
-@inject ProtectedSessionStorage storage
+@inject ProtectedLocalStorage storage
 
-@inject NavigationManager nav
+<PageTitle>永続型カウンター</PageTitle>
 
-<PageTitle>セッション型カウンター</PageTitle>
-
-<h1>セッション型カウンター（1ページ目）</h1>
+<h1>永続型カウンター</h1>
 
 @if (currentCount.HasValue)
 {
     <p role="status">Current count: @currentCount</p>
-    <button class="btn btn-primary" @onclick="IncrementCount">増やす</button>
-    <button class="btn btn-primary" @onclick="MoveToNextPage">次のページへ</button>
+    <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 }
 else
 {
@@ -31,7 +28,7 @@ else
 
 @code {
     private int? currentCount = 0;
-    private static string COUNTER_KEY = "Samples.SessionCounter.CurrentCount";
+    private static string COUNTER_KEY = "Samples.PersistentCounter.CurrentCount";
 
     protected override async Task OnInitializedAsync()
     {
@@ -44,11 +41,4 @@ else
         currentCount++;
         await storage.SetAsync(COUNTER_KEY, currentCount!.Value);
     }
-
-    private void MoveToNextPage()
-    {
-        nav.NavigateTo("/Samples/SessionNextPage");
-    }
-
-
 }
