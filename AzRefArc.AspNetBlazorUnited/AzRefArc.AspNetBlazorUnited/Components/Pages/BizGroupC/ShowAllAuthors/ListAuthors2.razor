@@ -1,4 +1,4 @@
-﻿@page "/BizGroupC/ShowAllAuthors/ListAuthors"
+﻿@page "/BizGroupC/ShowAllAuthors/ListAuthors2"
 @using Microsoft.AspNetCore.Components.QuickGrid
 
 @rendermode InteractiveServerWithoutPrerendering
@@ -9,16 +9,22 @@
 <PageTitle>著者データ一覧</PageTitle>
 
 <h3>著者データ一覧</h3>
+<h5>データを取得します。</h5>
+
+<fieldset disabled="@isFormDisabled">
+    <input type="button" @onclick="GetData" class="btn btn-primary" value="データ取得" />
+    <input type="button" @onclick="ResetData" class="btn btn-warning" value="リセット" />
+</fieldset>
 
 <hr />
 
 @if (authors == null)
 {
-    <p><em>現在データを取得中です...</em></p>
+    <p>データをロード中です...</p>
 }
 else if (authors.Count == 0)
 {
-    <p><em>データが一件もありません。</em></p>
+    <p>データがありません。</p>
 }
 else
 {
@@ -45,15 +51,24 @@ else
     // ビューモデル
     List<Author>? authors { get; set; } = new List<Author>();
     PaginationState paginationState = new PaginationState { ItemsPerPage = 10 };
+    bool isFormDisabled { get; set; } = false;
 
     // イベントハンドラ(アプリケーション処理)
-    protected override async Task OnInitializedAsync()
+    protected async Task GetData()
     {
         authors = null;
+        isFormDisabled = true;
         await Task.Delay(1000);
+
         using (var pubs = dbFactory.CreateDbContext())
         {
             authors = await pubs.Authors.ToListAsync();
         }
+        isFormDisabled = false;
+    }
+
+    protected void ResetData()
+    {
+        authors = new List<Author>();
     }
 }
