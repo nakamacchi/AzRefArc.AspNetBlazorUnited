@@ -14,7 +14,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AzRefArc.AspNetBlazorUnited.Shared\AzRefArc.AspNetBlazorUnited.Shared.csproj" />
+    <Folder Include="Pages\BizGroupA\ShowAllAuthors\" />
+    <Folder Include="Pages\BizGroupA\ShowAuthorsByCondition\" />
+    <Folder Include="Pages\BizGroupA\ShowAuthorsByState\" />
+    <Folder Include="Pages\BizGroupA\ShowAuthorsByTopN\" />
+    <Folder Include="Pages\BizGroupB\EditAuthorByOptimistic\" />
+    <Folder Include="Pages\BizGroupC\ShowAllAuthors\" />
   </ItemGroup>
 
 </Project>

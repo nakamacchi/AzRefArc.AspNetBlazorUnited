@@ -1,4 +1,4 @@
-﻿namespace AzRefArc.AspNetBlazorUnited.Shared.Data
+﻿namespace AzRefArc.AspNetBlazorUnited.Client.Data
 {
     public class PublisherOverview
     {

@@ -20,7 +20,7 @@
 </div>
 
 @code {
-    private async Task DecrementCount()
+    private void DecrementCount()
     {
         ClientSession.CurrentCount--;
         this.StateHasChanged();

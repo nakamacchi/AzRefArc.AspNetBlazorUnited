@@ -1,5 +1,5 @@
 ﻿using AzRefArc.AspNetBlazorUnited.Data;
-using AzRefArc.AspNetBlazorUnited.Shared.Data;
+using AzRefArc.AspNetBlazorUnited.Client.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,4 +1,4 @@
-﻿using AzRefArc.AspNetBlazorUnited.Shared.Data;
+﻿using AzRefArc.AspNetBlazorUnited.Client.Data;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;

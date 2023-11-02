@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Web;
 
-namespace AzRefArc.AspNetBlazorUnited.Shared
+namespace AzRefArc.AspNetBlazorUnited.Client
 {
     public static class CustomRenderingMode
     {

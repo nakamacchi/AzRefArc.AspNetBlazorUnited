@@ -1,4 +1,4 @@
-﻿using AzRefArc.AspNetBlazorUnited.Shared.Data;
+﻿using AzRefArc.AspNetBlazorUnited.Client.Data;
 
 namespace AzRefArc.AspNetBlazorUnited.Client.Pages.Samples
 {

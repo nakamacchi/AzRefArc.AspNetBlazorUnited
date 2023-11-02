@@ -1,7 +1,7 @@
-﻿using AzRefArc.AspNetBlazorUnited.Client.Pages.Samples;
-using AzRefArc.AspNetBlazorUnited.Data;
-using AzRefArc.AspNetBlazorUnited.Shared.Data;
+﻿using AzRefArc.AspNetBlazorUnited.Data;
+using AzRefArc.AspNetBlazorUnited.Client.Data;
 using Microsoft.EntityFrameworkCore;
+using AzRefArc.AspNetBlazorUnited.Client.Pages.Samples;
 
 namespace AzRefArc.AspNetBlazorUnited.Components.Pages.Samples
 {

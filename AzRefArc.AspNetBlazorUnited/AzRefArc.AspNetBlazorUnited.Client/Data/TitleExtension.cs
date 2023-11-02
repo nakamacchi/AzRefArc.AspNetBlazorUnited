@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AzRefArc.AspNetBlazorUnited.Shared.Data
+namespace AzRefArc.AspNetBlazorUnited.Client.Data
 {
     public partial class Title
     {
