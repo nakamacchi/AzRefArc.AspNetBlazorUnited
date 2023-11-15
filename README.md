@@ -50,6 +50,11 @@
 
 [ppt](https://livesend.microsoft.com/i/KiIa1FQzy1DUXI8U0n7t8Mk08Fb9jKY3D9OXIRgzmtw6G7iQYzLWpOMJ73X83AsFe8xQ9m___p6KsoaTXzCvWmUKhaaBLjx7tbCEaYkaErl2eu3UYSU5cPepZ3Sn6lg9TJ)
 
+![slide](images/スライド2.PNG)
+![slide](images/スライド8.PNG)
+![slide](images/スライド18.PNG)
+![slide](images/スライド28.PNG)
+
 ## .NET 8 における ASP.NET Core Blazor に関する情報について
 
 2023/11/14～16 のスケジュールで、オンラインで [.NET Conf 2023](https://www.dotnetconf.net/) が開催されており、その中で ASP.NET Core Blazor の最新情報が発表されています。この中にある Blazor のセッションを見ると、.NET 8 における Blazor の進化の概要がすぐに掴めると思いますのでご確認ください。
