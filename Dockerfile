@@ -34,4 +34,6 @@ CMD ["dotnet", "AzRefArc.AspNetBlazorUnited.dll"]
 # sudo docker run -p:8080:80 app
 # イメージデバッグ (コンテナ内を参照)
 # sudo docker run --rm -i -t -p:8080:80 app /bin/bash
+# 接続文字列を指定して起動
+# sudo docker run --env "CONNECTIONSTRINGS__PUBSDBCONTEXT=Server=tcp:xxxxx.database.windows.net,1433;Initial Catalog=pubs;Persist Security Info=False;User ID=xxxxx;Password=xxxxxx;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" -p:8080:80 app
 
