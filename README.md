@@ -10,9 +10,9 @@
 
 | 開発するアプリのタイプ | 開発スタイル | プロジェクトテンプレート | プロジェクトオプション | 利用するレンダリングモード | サンプルの置き場所 |
 | --- | --- | --- | --- | --- | --- |
-| イントラネット業務アプリ | Blazor Server 型 | Blazor Web App | Interactivity Type = Server, Intaractivity Location = Global | InteractiveServer(prerender: false) | [Link](https://github.com/nakamacchi/AzRefArc.AspNetBlazorServer) |
-| 随時切断型 Web アプリ | Blazor WASM 型 | Blazor Web Assembly アプリ | (指定なし) | InteractiveWebAssembly(prerender: false) | [Link](https://github.com/nakamacchi/AzRefArc.AspNetBlazorWasm) |
-| インターネット B2C アプリ | Blazor United 型 | Blazor Web App | Interactivity Type = Server and WebAssembly, Intaractivity Location = per page/component | Static SSR, InteractiveServer, WASM, Auto | [Link](https://github.com/nakamacchi/AzRefArc.AspNetBlazorUnited) |
+| イントラネット業務アプリ | Blazor Server 型 (従来型) | Blazor Web App | Interactivity Type = Server, Intaractivity Location = Global | InteractiveServer(prerender: false) | [Link](https://github.com/nakamacchi/AzRefArc.AspNetBlazorServer) |
+| 随時切断型 Web アプリ | Blazor WASM 型 (従来型) | Blazor Web Assembly アプリ | (指定なし) | InteractiveWebAssembly(prerender: false) | [Link](https://github.com/nakamacchi/AzRefArc.AspNetBlazorWasm) |
+| インターネット B2C アプリ | Blazor United 型 (.NET 8) | Blazor Web App | Interactivity Type = Server and WebAssembly, Intaractivity Location = per page/component | Static SSR, InteractiveServer, WASM, Auto | [Link](https://github.com/nakamacchi/AzRefArc.AspNetBlazorUnited) |
 
 ![picture 3](images/629cf27c3a3982940206a73ab867d1bfaadd5f9681100015847dfe8459d03fe4.png)  
 
