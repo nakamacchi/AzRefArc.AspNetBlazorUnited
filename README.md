@@ -48,7 +48,7 @@
 
 .NET 8 の Blazor United 型開発については、下記に解説資料を用意しています。.NET 7 からの差分情報になっておりますので、以前の Blazor をご存じの方はこちらの資料をご確認いただけると、内部の仕組みをよく理解できると思います。
 
-[ppt](https://livesend.microsoft.com/i/KiIa1FQzy1DUXI8U0n7t8Mk08Fb9jKY3D9OXIRgzmtw6G7iQYzLWpOMJ73X83AsFe8xQ9m___p6KsoaTXzCvWmUKhaaBLjx7tbCEaYkaErl2eu3UYSU5cPepZ3Sn6lg9TJ)
+[pptはこちらからご覧ください。](https://livesend.microsoft.com/i/KiIa1FQzy1DUXI8U0n7t8Mk08Fb9jKY3D9OXIRgzmtw6G7iQYzLWpOMJ73X83AsFe8xQ9m___p6KsoaTXzCvWmUKhaaBLjx7tbCEaYkaErl2eu3UYSU5cPepZ3Sn6lg9TJ)
 
 ![slide](images/スライド2.PNG)
 ![slide](images/スライド8.PNG)
