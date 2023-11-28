@@ -40,7 +40,7 @@
         authors = null;
         await Task.Delay(1000);
 
-        using (var pubs = dbFactory.CreateDbContext())
+        using (var pubs = await dbFactory.CreateDbContextAsync())
         {
             var query = pubs.Authors.OrderBy(a => a.AuthorId).Take(int.Parse(vm.Count));
             authors = await query.ToListAsync();

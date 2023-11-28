@@ -82,7 +82,7 @@
     {
         authors = null;
 
-        using (var pubs = dbFactory.CreateDbContext())
+        using (var pubs = await dbFactory.CreateDbContextAsync())
         {
             var query = pubs.Authors.AsQueryable();
             if (vm.IsEnabledState) query = query.Where(a => a.State == vm.State);

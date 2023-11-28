@@ -36,7 +36,7 @@ else
     {
         authors = null;
         await Task.Delay(1000);
-        using (var pubs = dbFactory.CreateDbContext())
+        using (var pubs = await dbFactory.CreateDbContextAsync())
         {
             authors = await pubs.Authors.ToListAsync();
         }
