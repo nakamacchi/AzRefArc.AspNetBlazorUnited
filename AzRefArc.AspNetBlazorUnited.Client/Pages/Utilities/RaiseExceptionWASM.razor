@@ -4,13 +4,7 @@
 <PageTitle>例外発生</PageTitle>
 
 <h3>サンプル例外発生</h3>
-<div>
-    このコンポーネントは現在
-    <span>
-        @(System.Runtime.InteropServices.RuntimeInformation.OSDescription.ToLower() == "browser" ? "WASM" : "Server")
-    </span>
-    で動作しています。
-</div>
+<p>このコンポーネントは現在 @(OperatingSystem.IsBrowser() ? "WASM" : "Server") で動作しています。</p>
 
 <p>ボタンを押下するとゼロ除算例外を発生させます。</p>
 

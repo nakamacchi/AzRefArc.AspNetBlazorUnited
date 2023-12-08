@@ -28,13 +28,7 @@
 
 <h5>データを取得します。</h5>
 
-<strong style="color: red;">
-    このコンポーネントは現在
-    <span>
-        @(System.Runtime.InteropServices.RuntimeInformation.OSDescription.ToLower() == "browser" ? "WASM" : "Server")
-    </span>
-    で動作しています。
-</strong>
+<p><strong style="color: red;">このコンポーネントは現在 @(OperatingSystem.IsBrowser() ? "WASM" : "Server") で動作しています。</strong></p>
 
 <fieldset disabled="@isFormDisabled">
     <input type="button" @onclick="GetData" class="btn btn-primary" value="データ取得" />

@@ -42,16 +42,7 @@
 </div>
 
 
-<div>
-    <strong style="color: red;">
-        このコンポーネントは現在
-        <span>
-            @(System.Runtime.InteropServices.RuntimeInformation.OSDescription.ToLower() == "browser" ? "WASM" : "Server")
-        </span>
-        で動作しています。
-    </strong>
-</div>
-
+<p><strong style="color: red;">このコンポーネントは現在 @(OperatingSystem.IsBrowser() ? "WASM" : "Server") で動作しています。</strong></p>
 
 <p role="status">Current count: @currentCount</p>
 
