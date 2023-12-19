@@ -92,7 +92,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        using (var pubs = await dbFactory.CreateDbContextAsync())
+        await using (var pubs = await dbFactory.CreateDbContextAsync())
         {
             authors = await pubs.Authors.ToListAsync();
         }
@@ -102,7 +102,7 @@ else
     {
         this.message = string.Format("{0} {1} さんの情報は以下の通りです。", selectedAuthor.AuthorFirstName, selectedAuthor.AuthorLastName);
 
-        using (var pubs = await dbFactory.CreateDbContextAsync())
+        await using (var pubs = await dbFactory.CreateDbContextAsync())
         {
             titles = await pubs.Titles.Where(t => t.TitleAuthors
                 .Where(ta => ta.AuthorId == selectedAuthor.AuthorId).Count() > 0)

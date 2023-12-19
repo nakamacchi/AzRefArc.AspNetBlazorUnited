@@ -35,7 +35,7 @@
     {
         authors = null;
 
-        using (var pubs = await dbFactory.CreateDbContextAsync())
+        await using (var pubs = await dbFactory.CreateDbContextAsync())
         {
             var query = pubs.Authors.OrderBy(a => a.AuthorId).Take(int.Parse(vm.Count))
                 .Select(a => new AuthorOverview()

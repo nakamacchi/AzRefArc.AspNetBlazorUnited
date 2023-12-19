@@ -91,7 +91,7 @@
 
         // await Task.Delay(1000);
 
-        using (var pubs = await dbFactory.CreateDbContextAsync())
+        await using (var pubs = await dbFactory.CreateDbContextAsync())
         {
             var query = pubs.Authors.AsQueryable();
             if (vm.IsEnabledState) query = query.Where(a => a.State == vm.State);
@@ -99,7 +99,7 @@
             if (vm.IsEnabledContract) query = query.Where(a => a.Contract == vm.Contract!.Value);
             if (vm.IsEnabledAuFname) query = query.Where(a => a.AuthorFirstName.StartsWith(vm.AuFname));
             authors = await query.ToListAsync();
-        }
+        };
 
         isFormDisabled = false;
     }
