@@ -11,13 +11,7 @@
 <button class="btn btn-info" @onclick="DecrementCount">減らす</button>
 <button class="btn btn-info" @onclick="BackToPreviousPage">前のページへ</button>
 
-<div>
-    このコンポーネントは現在
-    <span>
-        @(System.Runtime.InteropServices.RuntimeInformation.OSDescription.ToLower() == "browser" ? "WASM" : "Server")
-    </span>
-    で動作しています。
-</div>
+<p>このコンポーネントは現在 @(OperatingSystem.IsBrowser() ? "WASM" : "Server") で動作しています。</p>
 
 @code {
     private void DecrementCount()

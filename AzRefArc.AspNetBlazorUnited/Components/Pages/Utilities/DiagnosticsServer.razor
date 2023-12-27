@@ -11,13 +11,7 @@
 <div class="row">
     <div>
         <h5>コンポーネント動作</h5>
-        <div>
-            このコンポーネントは現在
-            <span>
-                @(System.Runtime.InteropServices.RuntimeInformation.OSDescription.ToLower() == "browser" ? "WASM" : "Server")
-            </span>
-            で動作しています。
-        </div>
+        <p>このコンポーネントは現在 @(OperatingSystem.IsBrowser() ? "WASM" : "Server") で動作しています。</p>
 
         <hr />
 

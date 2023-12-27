@@ -60,7 +60,7 @@ else
         isFormDisabled = true;
         await Task.Delay(1000);
 
-        using (var pubs = dbFactory.CreateDbContext())
+        await using (var pubs = await dbFactory.CreateDbContextAsync())
         {
             authors = await pubs.Authors.ToListAsync();
         }

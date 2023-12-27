@@ -73,6 +73,8 @@
     private List<Author>? authors = new List<Author>();
     private bool isFormDisabled = false;
 
+    int count = 0;
+
     // イベントハンドラ(アプリケーション処理)
     protected override void OnInitialized()
     {
@@ -82,12 +84,14 @@
 
     private async Task GetData()
     {
+        if (isFormDisabled) return; // ← UI 更新前の連打防止用
+
         isFormDisabled = true;
         authors = null;
 
-        await Task.Delay(1000);
+        // await Task.Delay(1000);
 
-        using (var pubs = dbFactory.CreateDbContext())
+        await using (var pubs = await dbFactory.CreateDbContextAsync())
         {
             var query = pubs.Authors.AsQueryable();
             if (vm.IsEnabledState) query = query.Where(a => a.State == vm.State);
@@ -95,7 +99,7 @@
             if (vm.IsEnabledContract) query = query.Where(a => a.Contract == vm.Contract!.Value);
             if (vm.IsEnabledAuFname) query = query.Where(a => a.AuthorFirstName.StartsWith(vm.AuFname));
             authors = await query.ToListAsync();
-        }
+        };
 
         isFormDisabled = false;
     }

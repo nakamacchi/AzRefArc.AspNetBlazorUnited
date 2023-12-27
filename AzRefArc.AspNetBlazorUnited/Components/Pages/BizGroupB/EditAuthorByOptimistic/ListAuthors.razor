@@ -68,7 +68,7 @@ else
     {
         authors = null;
 
-        using (var pubs = dbFactory.CreateDbContext())
+        await using (var pubs = await dbFactory.CreateDbContextAsync())
         {
             var query = from a in pubs.Authors
                         select new AuthorOverview()

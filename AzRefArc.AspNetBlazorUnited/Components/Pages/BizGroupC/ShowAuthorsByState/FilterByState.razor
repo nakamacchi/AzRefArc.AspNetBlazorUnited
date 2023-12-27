@@ -49,7 +49,7 @@
         authors = null;
         await Task.Delay(500);
 
-        using (var pubs = dbFactory.CreateDbContext())
+        await using (var pubs = await dbFactory.CreateDbContextAsync())
         {
             var query = pubs.Authors.Where(a => a.State == selectedKey);
             authors = await query.ToListAsync();

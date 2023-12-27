@@ -19,7 +19,7 @@ namespace AzRefArc.AspNetBlazorUnited.WebApi.Samples
         [HttpGet("GetAuthors")]
         public async Task<List<Author>> GetAuthors()
         {
-            using (var pubs = dbFactory.CreateDbContext())
+            await using (var pubs = await dbFactory.CreateDbContextAsync())
             {
                 return await pubs.Authors.ToListAsync();
             }

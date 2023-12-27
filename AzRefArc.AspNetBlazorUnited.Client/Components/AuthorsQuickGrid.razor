@@ -29,7 +29,7 @@ else
     </div>
 }
 
-<p>このコンポーネントは現在 @(System.Runtime.InteropServices.RuntimeInformation.OSDescription.ToLower() == "browser" ? "WASM" : "Server") で動作しています。</p>
+<p>このコンポーネントは現在 @(OperatingSystem.IsBrowser() ? "WASM" : "Server") で動作しています。</p>
 
 @code {
     // 外部パラメータ
