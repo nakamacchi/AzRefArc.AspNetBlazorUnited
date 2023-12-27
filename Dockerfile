@@ -10,10 +10,10 @@ ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
 WORKDIR /src
 COPY . /src
-RUN dotnet build . -c Release -o /app/build
+RUN dotnet build ./AzRefArc.AspNetBlazorUnited/AzRefArc.AspNetBlazorUnited.csproj -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish . -c Release -o /app/publish
+RUN dotnet publish ./AzRefArc.AspNetBlazorUnited/AzRefArc.AspNetBlazorUnited.csproj -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
