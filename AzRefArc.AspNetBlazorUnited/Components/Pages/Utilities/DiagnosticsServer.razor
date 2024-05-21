@@ -36,6 +36,7 @@
             items.Add("OS", System.Runtime.InteropServices.RuntimeInformation.OSDescription);
             items.Add("OSアーキテクチャ", System.Runtime.InteropServices.RuntimeInformation.OSArchitecture.ToString());
             items.Add("プロセスアーキテクチャ", System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture.ToString());
+            items.Add("プロセス名", System.Diagnostics.Process.GetCurrentProcess()!.ProcessName);
             items.Add("現在時刻", DateTime.Now.ToString());
         }
 
