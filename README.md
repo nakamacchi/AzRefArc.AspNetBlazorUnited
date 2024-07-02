@@ -30,6 +30,46 @@
 }
 ```
 
+## 本番環境での稼働について
+
+ASP.NET Core Blazor のアプリを、本番環境のようなクラスタリングされた環境下で稼働させる場合には、暗号処理に利用する鍵情報をすべてのサーバ間で揃えることが必要になります([詳細](https://learn.microsoft.com/ja-jp/aspnet/core/security/data-protection/configuration/overview?view=aspnetcore-8.0))。いくつかの方法がありますが、本サンプルでは以下のような実装を組み込んであります。
+
+- アプリケーション設定に DataProtection:UseSharedKeyOnDatabase（環境変数の場合は DataProtection__UseSharedKeyOnDatabase）に true が設定されている場合には、鍵情報を DB により共有する。
+- 個別に DB を用意するには大変なため、pubs データベース上に鍵を保存するテーブルを作成して利用する。
+  - 本機能を利用する場合には、対象データベース上で以下のクエリを実行し、鍵を保存するテーブルを作成しておく
+  - CREATE TABLE [dbo].[DataProtectionKeys] ( [ID][int] IDENTITY(1, 1) NOT NULL PRIMARY KEY, [FriendlyName] [varchar] (64) NULL, [Xml][text] NULL)
+  - これにより、鍵情報がこのテーブルに保存され、クラスタリングされたサーバ間で共有されるようになる。
+- 上記処理を行うために、アプリケーションに以下を加えている。
+  - DataProtectionKeyDbContext.cs ファイルの追加
+  - Microsoft.AspNetCore.DataProtection.EntityFrameworkCore パッケージの追加
+  - Program.cs ファイルへの条件分岐コードの追加（下記）
+
+```C#
+string? useSharedKeyOnDatabase = builder.Configuration["DataProtection:UseSharedKeyOnDatabase"];
+if (string.IsNullOrEmpty(useSharedKeyOnDatabase) == false && bool.Parse(useSharedKeyOnDatabase))
+{
+    builder.Services.AddDbContextFactory<DataProtectionKeyDbContext>(opt =>
+    {
+        // DbContext 構成設定
+        // https://docs.microsoft.com/ja-jp/ef/core/dbcontext-configuration/#other-dbcontext-configuration
+        if (builder.Environment.IsDevelopment())
+        {
+            opt = opt.EnableSensitiveDataLogging().EnableDetailedErrors();
+        }
+        opt.UseSqlServer(
+            builder.Configuration.GetConnectionString("PubsDbContext"),
+            providerOptions =>
+            {
+                providerOptions.EnableRetryOnFailure();
+            });
+    });
+    builder.Services.AddDataProtection().PersistKeysToDbContext<DataProtectionKeyDbContext>();
+}
+
+```
+
+なお本サンプルでは取り扱いを用意にするために DB 上に鍵を保存しましたが、実際の環境では KeyVault などで共有する方法もあります。詳細はドキュメントを参照してください。
+
 ## 本サンプルの特徴
 
 本サンプルは Blazor United 型のアプリです。以下に示すように、4 通りのレンダリングモードを一つのアプリの中に混在させて利用しています。
