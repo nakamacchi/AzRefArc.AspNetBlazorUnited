@@ -30,6 +30,40 @@
 }
 ```
 
+## 本サンプルの特徴
+
+本サンプルは Blazor United 型のアプリです。以下に示すように、4 通りのレンダリングモードを一つのアプリの中に混在させて利用しています。
+
+![picture 0](images/61c634da024feebbb13c1ae95be44286f6c15196691cd7554349d101a464cf6f.png)  
+
+それぞれのレンダリングモードの概要は以下の通りです。
+
+![picture 1](images/272dc3f0be4d58201b6d6bb3451aa0f01201a7daa72dc8d63979819842c1c3a6.png)  
+
+各レンダリングモードと付随するオプション、Blazor ページの稼働場所については下記を参考にしてください。プリレンダリング機能を有効にした場合には、WASM, Auto モジュールがサーバ側でも動作する、という点に注意してください。
+
+![picture 2](images/2089164963b516d88dc29379f02fa952567c9314ceb523ad20c539c487b8380b.png)  
+
+## 解説資料について
+
+.NET 8 の Blazor United 型開発については、下記に解説資料を用意しています。.NET 7 からの差分情報になっておりますので、以前の Blazor をご存じの方はこちらの資料をご確認いただけると、内部の仕組みをよく理解できると思います。
+
+[pptはこちらからご覧ください。](https://livesend.microsoft.com/i/KiIa1FQzy1DUXI8U0n7t8Mk08Fb9jKY3D9OXIRgzmtw6G7iQYzLWpOMJ73X83AsFe8xQ9m___p6KsoaTXzCvWmUKhaaBLjx7tbCEaYkaErl2eu3UYSU5cPepZ3Sn6lg9TJ)
+
+![slide](images/スライド2.PNG)
+![slide](images/スライド8.PNG)
+![slide](images/スライド18.PNG)
+![slide](images/スライド28.PNG)
+
+## ASP.NET Core Blazor に関する学習書籍
+
+ASP.NET Core Blazor を学習したい方は、以下の書籍をご活用ください。日本マイクロソフトの .NET メンバーにより書かれた書籍で、業務 Web アプリ開発に必要な知識を基礎から一通り学習することができます。
+
+- [C#ユーザーのためのWebアプリ開発パターン　ASP.NET Core Blazorによるエンタープライズアプリ開発](https://book.impress.co.jp/books/1122101173)
+- なお、新卒向けの入門的な書籍ではなく、経験年数 5～10 年以上の方を想定して書かれた実践的な書籍であるため、C# や Web 開発一般に関する説明は必ずしも十分ではありません。読んでみて知識が不足していると感じられた場合は、他の一般的な技術解説書も併用していただけるとよいかと思います。逆に、Java などの他言語で Web 開発に慣れた方であれば、（細かいコードはともかく）アーキテクチャ的な要点などを短時間でつかんでいただけると思います。
+
+[![表紙](images/1122101173-520x.jpg)](https://book.impress.co.jp/books/1122101173)
+
 ## 本番環境での稼働について
 
 ASP.NET Core Blazor のアプリを、本番環境のようなクラスタリングされた環境下で稼働させる場合には、暗号処理に利用する鍵情報をすべてのサーバ間で揃えることが必要になります([詳細](https://learn.microsoft.com/ja-jp/aspnet/core/security/data-protection/configuration/overview?view=aspnetcore-8.0))。いくつかの方法がありますが、本サンプルでは以下のような実装を組み込んであります。
@@ -69,32 +103,3 @@ if (string.IsNullOrEmpty(useSharedKeyOnDatabase) == false && bool.Parse(useShare
 ```
 
 なお本サンプルでは取り扱いを用意にするために DB 上に鍵を保存しましたが、実際の環境では KeyVault などで共有する方法もあります。詳細はドキュメントを参照してください。
-
-## 本サンプルの特徴
-
-本サンプルは Blazor United 型のアプリです。以下に示すように、4 通りのレンダリングモードを一つのアプリの中に混在させて利用しています。
-
-![picture 0](images/61c634da024feebbb13c1ae95be44286f6c15196691cd7554349d101a464cf6f.png)  
-
-それぞれのレンダリングモードの概要は以下の通りです。
-
-![picture 1](images/272dc3f0be4d58201b6d6bb3451aa0f01201a7daa72dc8d63979819842c1c3a6.png)  
-
-各レンダリングモードと付随するオプション、Blazor ページの稼働場所については下記を参考にしてください。プリレンダリング機能を有効にした場合には、WASM, Auto モジュールがサーバ側でも動作する、という点に注意してください。
-
-![picture 2](images/2089164963b516d88dc29379f02fa952567c9314ceb523ad20c539c487b8380b.png)  
-
-## 解説資料について
-
-.NET 8 の Blazor United 型開発については、下記に解説資料を用意しています。.NET 7 からの差分情報になっておりますので、以前の Blazor をご存じの方はこちらの資料をご確認いただけると、内部の仕組みをよく理解できると思います。
-
-[pptはこちらからご覧ください。](https://livesend.microsoft.com/i/KiIa1FQzy1DUXI8U0n7t8Mk08Fb9jKY3D9OXIRgzmtw6G7iQYzLWpOMJ73X83AsFe8xQ9m___p6KsoaTXzCvWmUKhaaBLjx7tbCEaYkaErl2eu3UYSU5cPepZ3Sn6lg9TJ)
-
-![slide](images/スライド2.PNG)
-![slide](images/スライド8.PNG)
-![slide](images/スライド18.PNG)
-![slide](images/スライド28.PNG)
-
-## .NET 8 における ASP.NET Core Blazor に関する情報について
-
-2023/11/14～16 のスケジュールで、オンラインで [.NET Conf 2023](https://www.dotnetconf.net/) が開催されており、その中で ASP.NET Core Blazor の最新情報が発表されています。この中にある Blazor のセッションを見ると、.NET 8 における Blazor の進化の概要がすぐに掴めると思いますのでご確認ください。
