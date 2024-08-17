@@ -29,6 +29,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        // 注意）このページはプリレンダリングなしで動作する前提で記述されています。
+        // プリレンダリングありだと下記の処理は動作しません。詳細 → https://github.com/nakamacchi/Sample_BlazorBook?tab=readme-ov-file#p53-oninitializedasync-%E5%87%A6%E7%90%86%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6
         var result = await storage.GetAsync<int>(COUNTER_KEY);
         currentCount = result.Success ? result.Value : 0;
     }

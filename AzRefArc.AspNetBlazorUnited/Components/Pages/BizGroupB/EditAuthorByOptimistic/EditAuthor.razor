@@ -59,6 +59,11 @@
     // イベントハンドラ(アプリケーション処理)
     protected override async Task OnInitializedAsync()
     {
+        // セキュリティ対策
+        // 詳細 → https://github.com/nakamacchi/Sample_BlazorBook?tab=readme-ov-file#p203-%E3%83%91%E3%83%A9%E3%83%A1%E3%83%BC%E3%82%BF%E3%81%AE%E3%83%81%E3%82%A7%E3%83%83%E3%82%AF%E3%81%AB%E9%96%A2%E3%81%97%E3%81%A6
+        if (String.IsNullOrEmpty(AuthorId)) throw new ArgumentNullException("AuthorId");
+        if (System.Text.RegularExpressions.Regex.IsMatch(AuthorId, @"^\d{3}-\d{2}-\d{4}$") == false) throw new ArgumentException("AuthorId");
+
         states = USStatesUtil.GetAllStates();
 
         Author? editAuthor = null;
