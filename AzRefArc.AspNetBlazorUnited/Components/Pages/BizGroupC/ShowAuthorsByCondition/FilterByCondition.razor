@@ -55,9 +55,9 @@
         </dl>
 
         <button type="submit" class="btn btn-primary">検索</button>
-
-        <ValidationSummary />
     </fieldset>
+
+    <ValidationSummary />
 </EditForm>
 
 <hr />
@@ -77,7 +77,7 @@
     protected override void OnInitialized()
     {
         states = USStatesUtil.GetAllStates();
-        states.Add("", "");
+        states.Add("", ""); // ドロップダウンの初期値として空の選択肢を追加
     }
 
     private async Task GetData()
