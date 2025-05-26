@@ -1,0 +1,19 @@
+name: Build Check for Pull Requests
+# This workflow builds the Docker image for pull requests without pushing it to the registry.
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Docker build (no push)
+        run: |
+          docker build -t temp-image:${{ github.sha }} .

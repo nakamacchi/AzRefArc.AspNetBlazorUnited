@@ -1,0 +1,37 @@
+name: Build Image and Push to ACR
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Azure Container Registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.AZURE_REGISTRY }}
+          username: ${{ secrets.AZURE_CLIENT_ID }}
+          password: ${{ secrets.AZURE_CLIENT_SECRET }}
+
+      - name: Build and push Docker image
+        run: |
+          # Generate timestamp tag in format yyyyMMdd-HHmmss
+          TIMESTAMP=$(date '+%Y%m%d-%H%M%S')
+          
+          # Build the image once
+          docker build -t ${{ secrets.AZURE_REGISTRY }}/${{ secrets.AZURE_REPOSITORY }}:$TIMESTAMP .
+          
+          # Tag with 'latest' as well
+          docker tag ${{ secrets.AZURE_REGISTRY }}/${{ secrets.AZURE_REPOSITORY }}:$TIMESTAMP ${{ secrets.AZURE_REGISTRY }}/${{ secrets.AZURE_REPOSITORY }}:latest
+          
+          # Push both tags
+          docker push ${{ secrets.AZURE_REGISTRY }}/${{ secrets.AZURE_REPOSITORY }}:$TIMESTAMP
+          docker push ${{ secrets.AZURE_REGISTRY }}/${{ secrets.AZURE_REPOSITORY }}:latest
+
