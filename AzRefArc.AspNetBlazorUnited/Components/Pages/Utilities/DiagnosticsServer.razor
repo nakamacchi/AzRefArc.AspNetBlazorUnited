@@ -1,5 +1,8 @@
 ﻿@page "/Utilities/DiagnosticsServer"
+
 @using System.Runtime.InteropServices
+@using System.Reflection
+@using System.IO
 
 @rendermode InteractiveServerWithoutPrerendering
 
@@ -38,6 +41,13 @@
             items.Add("プロセスアーキテクチャ", System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture.ToString());
             items.Add("プロセス名", System.Diagnostics.Process.GetCurrentProcess()!.ProcessName);
             items.Add("現在時刻", DateTime.Now.ToString());
+            // DLL（実行中アセンブリ）のビルド日時（ファイルの最終更新日時）を追加
+            var asmPath = Assembly.GetExecutingAssembly().Location;
+            if (File.Exists(asmPath))
+            {
+                var buildTime = File.GetLastWriteTime(asmPath);
+                items.Add("アプリのコンパイル日時 (DLL ファイルのタイムスタンプ)", buildTime.ToString("yyyy-MM-dd HH:mm:ss"));
+            }
         }
 
         <div>
