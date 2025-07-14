@@ -49,7 +49,8 @@
           "git status": true,
           "git diff": true,
           "git add .": true,
-          "git commit -m": true
+          "git commit -m": true,
+          "sleep": true
 		},
         "github.copilot.chat.agent.terminal.denyList": {
           "rm ": true,
