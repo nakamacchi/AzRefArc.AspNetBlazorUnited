@@ -1,41 +1,70 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/dotnet
 {
-	"name": "C# (.NET)",
-	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/dotnet:1-8.0",
+  "name": "C# (.NET)",
+  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+  "image": "mcr.microsoft.com/devcontainers/dotnet:1-8.0",
 
-	// Features to add to the dev container. More info: https://containers.dev/features.
-	// "features": {},
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  // "features": {},
 
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [5000, 5001],
-	// "portsAttributes": {
-	//		"5001": {
-	//			"protocol": "https"
-	//		}
-	// }
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  // "forwardPorts": [5000, 5001],
+  // "portsAttributes": {
+  //		"5001": {
+  //			"protocol": "https"
+  //		}
+  // }
 
-	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "dotnet restore",
+  // Use 'postCreateCommand' to run commands after the container is created.
+  // "postCreateCommand": "dotnet restore",
 
-	// Configure tool-specific properties.
-	// "customizations": {},
-	"customizations": {
-			"vscode": {
-					"extensions": [
-							"ms-dotnettools.csharp", // C# 拡張
-							"ms-dotnettools.csdevkit", // C# Dev Kit
-							"ms-dotnettools.vscode-dotnet-runtime", // .NET Runtime
-							"eamodio.gitlens", // GitLens
-							"ms-azuretools.vscode-docker", // Docker サポート
-							"ms-vscode.powershell", // PowerShell
-							"editorconfig.editorconfig", // EditorConfig
-							"esbenp.prettier-vscode" // Prettier (コード整形)
-					]
-			}
-	}
+  // Configure tool-specific properties.
+  // "customizations": {},
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csharp", // C# 拡張
+        "ms-dotnettools.csdevkit", // C# Dev Kit
+        "ms-dotnettools.vscode-dotnet-runtime", // .NET Runtime
+        "eamodio.gitlens", // GitLens
+        "ms-azuretools.vscode-docker", // Docker サポート
+        "ms-vscode.powershell", // PowerShell
+        "editorconfig.editorconfig", // EditorConfig
+        "esbenp.prettier-vscode" // Prettier (コード整形)
+      ],
+      "settings": {
+        "github.copilot.chat.agent.terminal.allowList": {
+          "cd": true,
+          "ls": true,
+          "dir": true,
+          "dotnet build": true,
+          "dotnet test": true,
+          "dotnet run": true,
+          "mvn compile": true,
+          "mvn test": true,
+          "npm install": true,
+          "npm run build": true,
+          "npm test": true,
+          "git status": true,
+          "git diff": true,
+          "git add .": true,
+          "git commit -m": true
+		},
+        "github.copilot.chat.agent.terminal.denyList": {
+          "rm ": true,
+          "sudo": true,
+          "git push": true,
+          "del ": true,
+          "pip install": true,
+          "npm install <new-package>": true,
+          "npm install <unknown-package>": true
+		},
+        "github.copilot.chat.agent.terminal.autoApprove": false
+      }
+    }
+  }
 
-	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+  // "remoteUser": "root"
 }
